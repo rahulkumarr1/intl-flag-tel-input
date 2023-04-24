@@ -1,4 +1,4 @@
-# International Telephone Input <img src="https://img.shields.io/github/package-json/v/jackocnr/intl-tel-input.svg" /> <img src="https://img.shields.io/npm/dm/intl-tel-input.svg" />
+# International Telephone Input
 A JavaScript plugin for entering and validating international telephone numbers. It adds a flag dropdown to any input, detects the user's country, displays a relevant placeholder and provides formatting/validation methods.
 
 <img src="https://raw.github.com/jackocnr/intl-tel-input/master/screenshots/vanilla.png" alt="Screenshot" width="424px" style="max-width: 100%" />
@@ -42,30 +42,6 @@ _Note: In v12.0.0 we dropped support for IE9 and IE10, because they are [no long
   </script>
   ```
 
-## Getting Started (Using a bundler e.g. Webpack)
-1. Install with npm: `npm install intl-tel-input --save` or yarn: `yarn add intl-tel-input`
-
-2. Import the CSS: `import 'intl-tel-input/build/css/intlTelInput.css';`
-
-3. Override the path to flags.png in your CSS
-  ```css
-  .iti__flag {background-image: url("path/to/flags.png");}
-
-  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .iti__flag {background-image: url("path/to/flags@2x.png");}
-  }
-  ```
-
-4. Import the JS and initialise the plugin on your input element
-  ```js
-  import intlTelInput from 'intl-tel-input';
-
-  const input = document.querySelector("#phone");
-  intlTelInput(input, {
-      utilsScript: "path/to/utils.js"
-  });
-  ```
-
 ## Getting Started (Not using a bundler)
 1. Download the [latest release](https://github.com/jackocnr/intl-tel-input/releases/latest), or better yet install it with [npm](https://www.npmjs.com/package/intl-tel-input)
 
@@ -93,25 +69,6 @@ _Note: In v12.0.0 we dropped support for IE9 and IE10, because they are [no long
     });
   </script>
   ```
-
-## Recommended Usage
-We highly recommend you (lazy) load the included utils.js using the `utilsScript` option. Then the plugin is built to always deal with numbers in the full international format (e.g. "+17024181234") and convert them accordingly - even when `nationalMode` or `separateDialCode` is enabled. We recommend you get, store, and set numbers exclusively in this format for simplicity - then you don't have to deal with handling the country code separately, as full international numbers include the country code information.
-
-You can always get the full international number (including country code) using `getNumber`, then you only have to store that one string in your database (you don't have to store the country separately), and then the next time you initialise the plugin with that number it will automatically set the country and format it according to the options you specify (e.g. when using `nationalMode` it will automatically remove the international dial code for you).
-
-Finally, make sure you have `<meta charset="utf-8">` in the `<head>` section of your page, else you will get an error as the JS contains some special unicode characters.
-
-
-## Initialisation Options
-When you initialise the plugin, the first argument is the input element, and the second is an object containing any initialisation options you want, which are detailed below. Note: any options that take country codes should be [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) codes  
-
-**allowDropdown**  
-Type: `Boolean` Default: `true`  
-Whether or not to allow the dropdown. If disabled, there is no dropdown arrow, and the selected flag is not clickable. Also we display the selected flag on the right instead because it is just a marker of state.
-
-**autoInsertDialCode**  
-Type: `Boolean` Default: `false`  
-When enabled (requires `nationalMode` to be disabled), the international dial code will be automatically inserted into the input in 3 situations: (A) upon initialisation, and (B) when the user selects a country from the dropdown, and (C) upon calling `setCountry`. Additionally, the plugin will listen for blur/submit events, and if the input only contains a dial code, it will automatically be removed to avoid submitting just that.
 
 **autoPlaceholder**  
 Type: `String` Default: `"polite"`  
@@ -311,7 +268,6 @@ Change the placeholderNumberType option.
 iti.setPlaceholderNumberType("FIXED_LINE");
 ```
 
-
 ## Static Methods
 
 **getCountryData**  
@@ -359,19 +315,6 @@ This is triggered when the user opens the dropdown.
 
 **close:countrydropdown**  
 This is triggered when the user closes the dropdown.  
-
-
-## Utilities Script
-The utilities script ([build/js/utils.js](build/js/utils.js)) is a custom build of Google's [libphonenumber](https://github.com/googlei18n/libphonenumber) which enables the following features:
-
-* Formatting upon initialisation, as well as with `getNumber` and `setNumber`
-* Validation with `isValidNumber`, `getNumberType` and `getValidationError` methods
-* Placeholder set to an example number for the selected country - even specify the type of number (e.g. mobile) using the `placeholderNumberType` option
-* Extract the standardised (E.164) international number with `getNumber` even when using the `nationalMode` option
-
-International number formatting/validation is hard (it varies by country/district, and we currently support ~230 countries). The only comprehensive solution I have found is libphonenumber, from which I have precompiled the relevant parts into a single JavaScript file and included in the build directory. Unfortunately even after minification it is still ~215KB, but if you use the `utilsScript` option then it will only fetch the script when the page has finished loading (to prevent blocking). If size is not a concern, then you can manually include the script yourself however you like, and as long as it has loaded before you initialise the plugin then it should work fine.
-
-To recompile the utils script yourself (e.g. to update the version of libphonenumber it is built from), see the [contributing guide](https://github.com/jackocnr/intl-tel-input/blob/master/.github/CONTRIBUTING.md#updating-to-a-new-version-of-libphonenumber).
 
 
 ## Troubleshooting
