@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>International Telephone Input</title>
+    <link rel="stylesheet" href="build/css/intlTelInput.css" />
+    <link rel="stylesheet" href="build/css/demo.css" />
+</head>
+
+<body>
+    <h1>International Telephone Input</h1>
+    <form id="form">
+        <input id="phone" name="phone" type="tel" />
+        <button type="submit">Submit</button>
+    </form>
+    <p id="message"></p>
+
+    <script src="build/js/intlTelInput.js"></script>
+    <script>
+
+        const form = document.querySelector("#form");
+        const message = document.querySelector("#message");
+        var input = document.querySelector("#phone");
+        const iti = window.intlTelInput(input, {
+            // allowDropdown: false,
+            autoInsertDialCode: true,
+            autoPlaceholder: "off",
+            // dropdownContainer: document.body,
+            // excludeCountries: ["us"],
+            // formatOnDisplay: false,
+            geoIpLookup: function (callback) {
+                fetch("https://ipapi.co/json")
+                    .then(function (res) { return res.json(); })
+                    .then(function (data) { callback(data.country_code); })
+                    .catch(function () { callback("in"); });
+            },
+            // hiddenInput: "full_number",
+            initialCountry: "auto",
+            // localizedCountries: { 'de': 'Deutschland' },
+            // nationalMode: false,
+            onlyCountries: ['us', 'gb', 'in', 'ca'],
+            // placeholderNumberType: "MOBILE",
+            preferredCountries: [],
+            separateDialCode: true,
+            // showFlags: false,
+            utilsScript: "build/js/utils.js"
+        });
+
+        form.onsubmit = () => {
+            if (!iti.isValidNumber()) {
+                message.innerHTML = "Invalid number. Please try again.";
+                return false;
+            }
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const fullPhone = urlParams.get('full_phone')
+        if (fullPhone) {
+            message.innerHTML = `Submitted hidden input value: ${fullPhone}`;
+        }
+    </script>
+</body>
+
+</html>
